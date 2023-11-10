@@ -1,0 +1,15 @@
+<svg width="30" height="28" viewBox="0 0 30 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Play">
+<mask id="mask0_1_18869" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="28">
+<path id="Rectangle 2" d="M0.750977 0.500061H29.068V27.5001H0.750977V0.500061Z" fill="#C4C4C4"/>
+</mask>
+<g mask="url(#mask0_1_18869)">
+<g id="Group 18">
+<path id="Vector" d="M26.0135 21.1599L26.013 21.1609C24.2044 24.5868 19.4431 26.4063 14.452 26.2177C9.4799 26.0299 4.59467 23.8563 2.57497 19.6824C0.644757 15.6649 2.02146 10.6519 5.08949 6.79434C8.15923 2.93459 12.7494 0.449963 16.9669 1.29137C25.6071 3.01511 30.5886 12.5355 26.0135 21.1599Z" fill="#FCFBF9" stroke="#FCFBF9" stroke-width="1.125" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<g id="Group">
+<path id="Vector_2" d="M12.7653 15.9665C12.7603 16.84 13.7094 17.3858 14.4619 16.9419L17.6118 15.0838C18.346 14.6507 18.3506 13.5902 17.6202 13.1508L14.4917 11.2686C13.7444 10.819 12.7918 11.354 12.7868 12.2261L12.7653 15.9665Z" fill="#EA7052"/>
+</g>
+</g>
+</g>
+</g>
+</svg>
