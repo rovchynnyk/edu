@@ -21,12 +21,10 @@ const router = createBrowserRouter([
       {
         path: '/subject/:subject',
         element: <Subject />,
-        children: [
-          {
-            path: '/:video',
-            element: <Video />,
-          },
-        ],
+      },
+      {
+        path: '/subject/:subject/videos/:video',
+        element: <Video />,
       },
       {
         path: '*',

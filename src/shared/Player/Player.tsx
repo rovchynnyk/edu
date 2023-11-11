@@ -20,9 +20,10 @@ import type { BookmarkT } from './components/ProgressBar';
 type PropsT = Readonly<{
   id: string | number;
   url: string;
+  subject?: string;
 }>;
 
-export const Player = ({ id, url }: PropsT) => {
+export const Player = ({ id, url, subject }: PropsT) => {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState<OnProgressProps | null>(null);
   const [duration, setDuration] = useState(0);
@@ -116,29 +117,21 @@ export const Player = ({ id, url }: PropsT) => {
       toast.success('You have been rewarded with 10 points!');
     }
 
-    const lastPlaybacks = JSON.parse(
-      localStorage.getItem('lastPlaybacks') ?? ''
-    );
-
-    if (!lastPlaybacks) return;
-
-    if (lastPlaybacks[url]) {
-      delete lastPlaybacks[url];
-
-      localStorage.setItem('lastPlaybacks', JSON.stringify(lastPlaybacks));
-    }
+    localStorage.removeItem('lastUnfinishedVideo');
   };
 
   const savePlaybackTime = useCallback(
     (progress: number) => {
       localStorage.setItem(
-        'lastPlaybacks',
+        'lastUnfinishedVideo',
         JSON.stringify({
-          [url]: progress,
+          progress,
+          id,
+          subject,
         })
       );
     },
-    [url]
+    [subject, id]
   );
 
   useEffect(() => {
@@ -147,6 +140,20 @@ export const Player = ({ id, url }: PropsT) => {
 
     setBookmarks(savedBookmarks);
   }, []);
+
+  useEffect(() => {
+    if (!playerRef.current) return;
+
+    const lastPlayback = localStorage.getItem('lastUnfinishedVideo');
+
+    const { progress: lastProgress = 0 } = lastPlayback
+      ? JSON.parse(lastPlayback)
+      : {};
+
+    if (progress) {
+      playerRef.current.seekTo(parseFloat(lastProgress));
+    }
+  }, [progress, url]);
 
   return (
     <>

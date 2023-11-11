@@ -2,20 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { Player } from '../../shared/Player/Player';
 
-const subjectsMap = {
-  mathematics: {
-    title: 'Mathematics',
-    lessons: [
-      {
-        title: 'Properties of Plane Shapes',
-        video: {
-          id: '1',
-          url: 'https://drive.google.com/uc?id=1EnRRKw7aiNnij_TdOPBsFcY_D7Af78KV',
-        },
-      },
-    ],
-  },
-} as const;
+import { subjectsMap } from '../../shared/mocks/subjectsMock';
 
 export const Subject = () => {
   const { subject } =
@@ -37,8 +24,8 @@ export const Subject = () => {
         </div>
       </div>
 
-      {lessons.map(({ video }, index) => {
-        return <Player {...video} key={index} />;
+      {lessons.map((lesson, index) => {
+        return <Player id={index} url={lesson} subject={subject} key={index} />;
       })}
     </div>
   );

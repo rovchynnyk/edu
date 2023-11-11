@@ -1,14 +1,15 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import ResumeIcon from './assets/resume.svg';
 
 export const ResumeLearning = () => {
-  useEffect(() => {
-    const lastWatchedTime = localStorage.getItem('lastPlaybacks') ?? '';
+  const lastUnfinishedVideo = localStorage.getItem('lastUnfinishedVideo');
 
-    console.log(lastWatchedTime);
-  }, []);
+  const { id = '', subject = '' } = lastUnfinishedVideo
+    ? JSON.parse(lastUnfinishedVideo)
+    : {};
+
+  if (!subject) return null;
 
   return (
     <div className="mb-36">
@@ -26,7 +27,7 @@ export const ResumeLearning = () => {
         </div>
 
         <Link
-          to="/"
+          to={`/subject/${subject}/videos/${id}`}
           className="flex items-center justify-center w-50 h-50 rounded-full text-2xl bg-white bg-opacity-20"
         >
           &rarr;
