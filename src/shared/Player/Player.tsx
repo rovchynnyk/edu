@@ -33,6 +33,7 @@ export const Player = ({ id, url, subject }: PropsT) => {
     Record<string, ReadonlyArray<BookmarkT>>
   >({});
   const [playbackTime, setPlaybackTime] = useState(0);
+  const [videoUrl, setVideoUrl] = useState<string>('');
 
   const playerRef = useRef<ReactPlayer | null>(null);
   const playerContainerRef = useRef<HTMLDivElement | null>(null);
@@ -155,11 +156,31 @@ export const Player = ({ id, url, subject }: PropsT) => {
     }
   }, [progress, url]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const cacheResponse = await caches.match(url);
+
+        if (cacheResponse) {
+          const blob = await cacheResponse.blob();
+
+          setVideoUrl(URL.createObjectURL(blob));
+        } else {
+          setVideoUrl(url);
+        }
+      } catch (error) {
+        console.error('Error when trying to load video from cache:', error);
+
+        setVideoUrl(url);
+      }
+    })();
+  }, [url]);
+
   return (
     <>
       <div className="relative group mb-24" ref={playerContainerRef}>
         <ReactPlayer
-          url={url}
+          url={videoUrl}
           ref={playerRef}
           playing={playing}
           controls={false}
