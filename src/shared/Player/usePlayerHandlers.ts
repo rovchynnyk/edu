@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { toast } from 'react-toastify';
 
@@ -16,8 +16,8 @@ type PropsT = Readonly<{
 }>;
 
 export const usePlayerHandlers = ({ togglePlay, ...video }: PropsT) => {
-  const [activeNote, setActiveNote] = useState<string | null>(null);
   const [duration, setDuration] = useState(0);
+  const [activeNote, setActiveNote] = useState<string | null>(null);
   const [progress, setProgress] = useState<OnProgressProps | null>(null);
 
   const playerContainerRef = useRef<HTMLDivElement>(null);
@@ -57,10 +57,6 @@ export const usePlayerHandlers = ({ togglePlay, ...video }: PropsT) => {
     player.seekTo(currentTime + amount, 'seconds');
   };
 
-  const handleDuration = (duration: number) => {
-    setDuration(duration);
-  };
-
   const handleVideoEnd = () => {
     togglePlay();
 
@@ -76,6 +72,22 @@ export const usePlayerHandlers = ({ togglePlay, ...video }: PropsT) => {
     savePlaybackTime(progress?.playedSeconds ?? 0, video.id, video.subject);
   };
 
+  useEffect(() => {
+    const player = playerRef.current;
+
+    if (!player) return;
+
+    const lastPlayback = localStorage.getItem('lastUnfinishedVideo');
+
+    const { progress: lastProgress = 0 } = lastPlayback
+      ? JSON.parse(lastPlayback)
+      : {};
+
+    if (lastProgress) {
+      player.seekTo(parseFloat(lastProgress));
+    }
+  }, []);
+
   return {
     activeNote,
     duration,
@@ -85,8 +97,8 @@ export const usePlayerHandlers = ({ togglePlay, ...video }: PropsT) => {
     handleSkip,
     handleProgress,
     handleMarkerClick,
-    handleDuration,
     handleVideoEnd,
     handleFullScreen,
+    handleDuration: setDuration,
   };
 };

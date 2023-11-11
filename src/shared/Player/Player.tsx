@@ -42,15 +42,15 @@ export const Player = ({ id, url, subject }: PropsT) => {
   const {
     duration,
     progress,
+    playerRef,
     handleSkip,
     activeNote,
-    playerRef,
+    playerContainerRef,
     handleProgress,
     handleDuration,
     handleMarkerClick,
     handleFullScreen,
     handleVideoEnd,
-    playerContainerRef,
   } = usePlayerHandlers({ togglePlay, id, subject });
 
   const addBookmark = useCallback(
@@ -81,20 +81,6 @@ export const Player = ({ id, url, subject }: PropsT) => {
 
     setBookmarks(savedBookmarks);
   }, []);
-
-  useEffect(() => {
-    if (!playerRef.current) return;
-
-    const lastPlayback = localStorage.getItem('lastUnfinishedVideo');
-
-    const { progress: lastProgress = 0 } = lastPlayback
-      ? JSON.parse(lastPlayback)
-      : {};
-
-    if (progress) {
-      playerRef.current.seekTo(parseFloat(lastProgress));
-    }
-  }, [playerRef, progress, url]);
 
   // useEffect(() => {
   //   (async () => {
