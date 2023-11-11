@@ -27,3 +27,18 @@ export const shouldBeRewarded = () => {
 
   return count === 1;
 };
+
+export const savePlaybackTime = (
+  progress: number,
+  id: string | number,
+  subject?: string
+) => {
+  localStorage.setItem(
+    'lastUnfinishedVideo',
+    JSON.stringify({
+      progress,
+      id,
+      subject,
+    })
+  );
+};

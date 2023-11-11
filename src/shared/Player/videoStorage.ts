@@ -1,7 +1,7 @@
 import localForage from 'localforage';
 
 localForage.config({
-  driver: localForage.INDEXEDDB,
+  driver: localForage.LOCALSTORAGE,
   name: 'videoDatabase',
   storeName: 'videos',
 });
