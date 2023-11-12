@@ -12,7 +12,7 @@ export const shouldBeRewarded = () => {
 
   // return false;
 
-  const { count = 1 } = JSON.parse(localStorage.getItem('lastLogin')!);
+  const { count = 1 } = JSON.parse(localStorage.getItem('lastLogin')!) ?? {};
 
   localStorage.setItem(
     'lastLogin',
@@ -27,19 +27,26 @@ export const shouldBeRewarded = () => {
 
 export const savePlaybackTime = ({
   progress,
+  url,
   id,
   subject,
 }: {
   progress: OnProgressProps | null;
   id: string | number;
+  url: string;
   subject?: string;
 }) => {
+  const lastVideos = JSON.parse(localStorage.getItem('lastUnfinishedVideo')!);
+
   localStorage.setItem(
     'lastUnfinishedVideo',
     JSON.stringify({
-      progress,
-      id,
-      subject,
+      ...lastVideos,
+      [url]: {
+        progress,
+        id,
+        subject,
+      },
     })
   );
 };

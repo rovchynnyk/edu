@@ -53,7 +53,7 @@ export const Player = ({ id, url, subject }: PropsT) => {
     handleFullScreen,
     handleVideoEnd,
     handlePlayerReady,
-  } = usePlayerHandlers({ togglePlay, id, subject });
+  } = usePlayerHandlers({ togglePlay, id, url, subject });
 
   const addBookmark = useCallback(
     (note: string) => {
@@ -63,7 +63,7 @@ export const Player = ({ id, url, subject }: PropsT) => {
         note,
       };
 
-      const videoBookmarks = bookmarks[url] ?? [];
+      const videoBookmarks = bookmarks?.[url] ?? [];
 
       const updatedBookmarks = {
         ...bookmarks,
@@ -103,18 +103,25 @@ export const Player = ({ id, url, subject }: PropsT) => {
   //   })();
   // }, [url]);
 
+  const handleStart = () => {
+    playerRef.current?.seekTo(progress?.playedSeconds ?? 0);
+  };
+
   useEffect(() => {
     const player = playerRef.current;
 
     if (player && playerReady) {
-      player.seekTo(progress?.playedSeconds ?? 0);
+      setTimeout(() => {
+        player.seekTo(progress?.playedSeconds ?? 0);
+      }, 1000);
     }
-  }, [playerReady, playerRef, progress?.playedSeconds]);
+  }, [playerReady, playerRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
       <div className="relative group mb-24" ref={playerContainerRef}>
         <ReactPlayer
+          muted
           url={url}
           ref={playerRef}
           playing={playing}
@@ -125,6 +132,7 @@ export const Player = ({ id, url, subject }: PropsT) => {
           onProgress={handleProgress}
           onEnded={handleVideoEnd}
           onReady={handlePlayerReady}
+          onStart={handleStart}
         />
 
         {playerReady ? (
@@ -145,9 +153,10 @@ export const Player = ({ id, url, subject }: PropsT) => {
             <SeekButton direction="forward" handleSkip={handleSkip} />
 
             <ProgressBar
-              bookmarks={bookmarks[url]}
+              bookmarks={bookmarks?.[url]}
               progress={progress}
               duration={duration}
+              playerElement={playerRef.current}
               onHandleMarkerClick={handleMarkerClick}
             />
 

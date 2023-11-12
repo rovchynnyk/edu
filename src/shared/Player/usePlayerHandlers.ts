@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer, { ReactPlayerProps } from 'react-player';
 import { toast } from 'react-toastify';
 
@@ -12,6 +12,7 @@ import type { OnProgressProps } from 'react-player/base';
 type PropsT = Readonly<{
   togglePlay: () => void;
   id: string | number;
+  url: string;
   subject?: string;
 }>;
 
@@ -20,7 +21,8 @@ export const usePlayerHandlers = ({ togglePlay, ...video }: PropsT) => {
   const [activeNote, setActiveNote] = useState<string | null>(null);
   const [playerReady, setPlayerReady] = useState<ReactPlayerProps | null>(null);
   const [progress, setProgress] = useState<OnProgressProps | null>(
-    JSON.parse(localStorage.getItem('lastUnfinishedVideo')!).progress
+    JSON.parse(localStorage.getItem('lastUnfinishedVideo')!)?.[video.url]
+      ?.progress
   );
 
   const playerContainerRef = useRef<HTMLDivElement>(null);
@@ -60,21 +62,25 @@ export const usePlayerHandlers = ({ togglePlay, ...video }: PropsT) => {
     player.seekTo(currentTime + amount, 'seconds');
   };
 
-  const handleVideoEnd = () => {
+  const handleVideoEnd = useCallback(() => {
     togglePlay();
 
     if (shouldBeRewarded()) {
       toast.success('You have been rewarded with 10 points!');
     }
 
-    localStorage.removeItem('lastUnfinishedVideo');
-  };
+    const lastVideos = JSON.parse(localStorage.getItem('lastUnfinishedVideo')!);
+
+    delete lastVideos[video.url];
+
+    localStorage.setItem('lastUnfinishedVideo', JSON.stringify(lastVideos));
+  }, [togglePlay, video.url]);
 
   useEffect(() => {
     return () => {
-      const { id, subject } = video;
+      const { id, url, subject } = video;
 
-      savePlaybackTime({ progress, id, subject });
+      savePlaybackTime({ progress, url, id, subject });
     };
   }, [progress, video]);
 

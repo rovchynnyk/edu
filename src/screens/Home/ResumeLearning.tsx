@@ -3,11 +3,16 @@ import { Link } from 'react-router-dom';
 import ResumeIcon from './assets/resume.svg';
 
 export const ResumeLearning = () => {
-  const lastUnfinishedVideo = localStorage.getItem('lastUnfinishedVideo');
+  const lastUnfinishedVideos = JSON.parse(
+    localStorage.getItem('lastUnfinishedVideo')!
+  );
 
-  const { id = '', subject = '' } = lastUnfinishedVideo
-    ? JSON.parse(lastUnfinishedVideo)
-    : {};
+  const lastUnfinishedVideosKeys = Object.keys(lastUnfinishedVideos);
+
+  const { id, subject } =
+    lastUnfinishedVideos[
+      lastUnfinishedVideosKeys[lastUnfinishedVideosKeys.length - 1]
+    ];
 
   if (!subject) return null;
 
