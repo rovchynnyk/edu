@@ -69,12 +69,8 @@ export const usePlayerHandlers = ({ togglePlay, ...video }: PropsT) => {
       toast.success('You have been rewarded with 10 points!');
     }
 
-    const lastVideos = JSON.parse(localStorage.getItem('lastUnfinishedVideo')!);
-
-    delete lastVideos[video.url];
-
-    localStorage.setItem('lastUnfinishedVideo', JSON.stringify(lastVideos));
-  }, [togglePlay, video.url]);
+    localStorage.removeItem('lastUnfinishedVideo');
+  }, [togglePlay]);
 
   useEffect(() => {
     return () => {
