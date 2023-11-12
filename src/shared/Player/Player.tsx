@@ -113,7 +113,7 @@ export const Player = ({ id, url, subject }: PropsT) => {
     if (player && playerReady) {
       setTimeout(() => {
         player.seekTo(progress?.playedSeconds ?? 0);
-      }, 1000);
+      }, 0);
     }
   }, [playerReady, playerRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
