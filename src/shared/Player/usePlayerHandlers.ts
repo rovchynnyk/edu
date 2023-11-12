@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import ReactPlayer from 'react-player';
+import ReactPlayer, { ReactPlayerProps } from 'react-player';
 import { toast } from 'react-toastify';
 
 import { shouldBeRewarded, savePlaybackTime } from '../utils';
@@ -18,7 +18,10 @@ type PropsT = Readonly<{
 export const usePlayerHandlers = ({ togglePlay, ...video }: PropsT) => {
   const [duration, setDuration] = useState(0);
   const [activeNote, setActiveNote] = useState<string | null>(null);
-  const [progress, setProgress] = useState<OnProgressProps | null>(null);
+  const [playerReady, setPlayerReady] = useState<ReactPlayerProps | null>(null);
+  const [progress, setProgress] = useState<OnProgressProps | null>(
+    JSON.parse(localStorage.getItem('lastUnfinishedVideo')!).progress
+  );
 
   const playerContainerRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<ReactPlayer>(null);
@@ -67,38 +70,27 @@ export const usePlayerHandlers = ({ togglePlay, ...video }: PropsT) => {
     localStorage.removeItem('lastUnfinishedVideo');
   };
 
-  const handleProgress = (progress: OnProgressProps) => {
-    setProgress(progress);
-    savePlaybackTime(progress?.playedSeconds ?? 0, video.id, video.subject);
-  };
-
   useEffect(() => {
-    const player = playerRef.current;
+    return () => {
+      const { id, subject } = video;
 
-    if (!player) return;
-
-    const lastPlayback = localStorage.getItem('lastUnfinishedVideo');
-
-    const { progress: lastProgress = 0 } = lastPlayback
-      ? JSON.parse(lastPlayback)
-      : {};
-
-    if (lastProgress) {
-      player.seekTo(parseFloat(lastProgress));
-    }
-  }, []);
+      savePlaybackTime({ progress, id, subject });
+    };
+  }, [progress, video]);
 
   return {
     activeNote,
     duration,
     progress,
+    playerReady,
     playerRef,
     playerContainerRef,
     handleSkip,
-    handleProgress,
     handleMarkerClick,
     handleVideoEnd,
     handleFullScreen,
+    handleProgress: setProgress,
     handleDuration: setDuration,
+    handlePlayerReady: setPlayerReady,
   };
 };

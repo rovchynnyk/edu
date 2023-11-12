@@ -1,3 +1,5 @@
+import type { OnProgressProps } from 'react-player/base';
+
 export const shouldBeRewarded = () => {
   // const lastLoginDate = localStorage.getItem('lastLoginDate');
   // const currentDate = new Date().toDateString();
@@ -9,30 +11,29 @@ export const shouldBeRewarded = () => {
   // }
 
   // return false;
-  const lastLogin = localStorage.getItem('lastLogin');
 
-  const { count = 1 } = lastLogin ? JSON.parse(lastLogin) : {};
-
-  const currentDate = new Date().toDateString();
+  const { count = 1 } = JSON.parse(localStorage.getItem('lastLogin')!);
 
   localStorage.setItem(
     'lastLogin',
     JSON.stringify({
-      date: currentDate,
+      date: new Date().toDateString(),
       count: count + 1,
     })
   );
 
-  console.log(count);
-
   return count === 1;
 };
 
-export const savePlaybackTime = (
-  progress: number,
-  id: string | number,
-  subject?: string
-) => {
+export const savePlaybackTime = ({
+  progress,
+  id,
+  subject,
+}: {
+  progress: OnProgressProps | null;
+  id: string | number;
+  subject?: string;
+}) => {
   localStorage.setItem(
     'lastUnfinishedVideo',
     JSON.stringify({
