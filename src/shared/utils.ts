@@ -1,17 +1,6 @@
 import type { OnProgressProps } from 'react-player/base';
 
 export const shouldBeRewarded = () => {
-  // const lastLoginDate = localStorage.getItem('lastLoginDate');
-  // const currentDate = new Date().toDateString();
-
-  // if (lastLoginDate !== currentDate) {
-  //   localStorage.setItem('lastLoginDate', currentDate);
-
-  //   return true;
-  // }
-
-  // return false;
-
   const { count = 1 } = JSON.parse(localStorage.getItem('lastLogin')!) ?? {};
 
   localStorage.setItem(

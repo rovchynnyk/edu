@@ -4,7 +4,7 @@ import { Player } from '../../shared/Player/Player';
 import { subjectsMap } from '../../shared/mocks/subjectsMock';
 
 export const Video = () => {
-  const { subject = '', video = '' } = useParams() ?? {};
+  const { subject = '', video = 0 } = useParams() ?? {};
 
   const { lessons } = subjectsMap[subject] ?? {};
 

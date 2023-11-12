@@ -103,10 +103,6 @@ export const Player = ({ id, url, subject }: PropsT) => {
   //   })();
   // }, [url]);
 
-  const handleStart = () => {
-    playerRef.current?.seekTo(progress?.playedSeconds ?? 0);
-  };
-
   useEffect(() => {
     const player = playerRef.current;
 
@@ -132,7 +128,6 @@ export const Player = ({ id, url, subject }: PropsT) => {
           onProgress={handleProgress}
           onEnded={handleVideoEnd}
           onReady={handlePlayerReady}
-          onStart={handleStart}
         />
 
         {playerReady ? (

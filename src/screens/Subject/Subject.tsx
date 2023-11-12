@@ -5,8 +5,7 @@ import { Player } from '../../shared/Player/Player';
 import { subjectsMap } from '../../shared/mocks/subjectsMock';
 
 export const Subject = () => {
-  const { subject } =
-    (useParams() as { subject: keyof typeof subjectsMap }) ?? {};
+  const { subject = '' } = useParams() ?? {};
 
   const { title = '', lessons = [] } = subjectsMap[subject] ?? {};
 
